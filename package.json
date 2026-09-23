@@ -1,0 +1,20 @@
+{
+  "name": "devtinder-be",
+  "version": "1.0.0",
+  "description": "dev tinder backend",
+  "keywords": [
+    "nodejs",
+    "backend"
+  ],
+  "license": "ISC",
+  "author": "Likhil",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
