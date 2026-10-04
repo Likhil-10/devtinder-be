@@ -18,6 +18,50 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+app.get("/feed", async (req, res) => {
+  try {
+    const allUsers = await User.find({});
+    if (allUsers.length === 0) {
+      res.status(404).send("Users not found)");
+    } else {
+      res.send(allUsers);
+    }
+  } catch (err) {
+    console.error("Error fetching users: ", err);
+    res.status(500).send("Error fetching users");
+  }
+});
+
+app.get("/findByEmail", async (req, res) => {
+  try {
+    const emailId = req.body.emailId;
+    const user = await User.findOne({ emailId });
+    if (!user) {
+      res.status(404).send("User not found");
+    } else {
+      res.send(user);
+    }
+  } catch (err) {
+    console.error("Error fetching user by email: ", err);
+    res.status(500).send("Error fetching user by email");
+  }
+});
+
+app.get("/user/:id", async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).send("User not found");
+    } else {
+      res.send(user);
+    }
+  } catch (err) {
+    console.error("Error fetching user by ID: ", err);
+    res.status(500).send("Error fetching user by ID");
+  }
+});
+
 connectDb()
   .then(() => {
     console.log("Database connected successfully");
