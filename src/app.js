@@ -62,6 +62,59 @@ app.get("/user/:id", async (req, res) => {
   }
 });
 
+app.delete("/user/deleteById", async (req, res) => {
+  try {
+    const userId = req.body.userId;
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) {
+      res.status(404).send("User not found");
+    } else {
+      res.send(user);
+    }
+  } catch (err) {
+    console.error("Error deleting user by ID: ", err);
+    res.status(500).send("Error deleting user by ID");
+  }
+});
+
+app.patch("/user/updateById", async (req, res) => {
+  try {
+    const updatedUser = req.body;
+    const userId = req.body.userId;
+
+    const user = await User.findByIdAndUpdate(userId, updatedUser, {
+      returnDocument: "after",
+    });
+    if (!user) {
+      res.status(404).send("User not found");
+    } else {
+      res.send(user);
+    }
+  } catch (err) {
+    console.error("Error updating user by ID: ", err);
+    res.status(500).send("Error updating user by ID");
+  }
+});
+
+// update with email and findone
+app.patch("/user/updateByEmail", async (req, res) => {
+  try {
+    const emailId = req.body.emailId;
+    const updatedUser = req.body;
+    const user = await User.findOneAndUpdate({ emailId }, updatedUser, {
+      returnDocument: "after",
+    });
+    if (!user) {
+      res.status(404).send("User not found");
+    } else {
+      res.send(user);
+    }
+  } catch (err) {
+    console.error("Error updating user by email: ", err);
+    res.status(500).send("Error updating user by email");
+  }
+});
+
 connectDb()
   .then(() => {
     console.log("Database connected successfully");
