@@ -14,7 +14,7 @@ app.post("/signup", async (req, res) => {
     res.send(newUser);
   } catch (err) {
     console.error("Error saving user: ", err);
-    res.status(400).send("Error saving user");
+    res.status(400).send("Error saving user: " + err.message);
   }
 });
 
@@ -28,7 +28,7 @@ app.get("/feed", async (req, res) => {
     }
   } catch (err) {
     console.error("Error fetching users: ", err);
-    res.status(500).send("Error fetching users");
+    res.status(500).send("Error fetching users: " + err.message);
   }
 });
 
@@ -43,7 +43,7 @@ app.get("/findByEmail", async (req, res) => {
     }
   } catch (err) {
     console.error("Error fetching user by email: ", err);
-    res.status(500).send("Error fetching user by email");
+    res.status(500).send("Error fetching user by email: " + err.message);
   }
 });
 
@@ -58,7 +58,7 @@ app.get("/user/:id", async (req, res) => {
     }
   } catch (err) {
     console.error("Error fetching user by ID: ", err);
-    res.status(500).send("Error fetching user by ID");
+    res.status(500).send("Error fetching user by ID: " + err.message);
   }
 });
 
@@ -73,7 +73,7 @@ app.delete("/user/deleteById", async (req, res) => {
     }
   } catch (err) {
     console.error("Error deleting user by ID: ", err);
-    res.status(500).send("Error deleting user by ID");
+    res.status(500).send("Error deleting user by ID: " + err.message);
   }
 });
 
@@ -84,6 +84,7 @@ app.patch("/user/updateById", async (req, res) => {
 
     const user = await User.findByIdAndUpdate(userId, updatedUser, {
       returnDocument: "after",
+      runValidators: true,
     });
     if (!user) {
       res.status(404).send("User not found");
@@ -92,7 +93,7 @@ app.patch("/user/updateById", async (req, res) => {
     }
   } catch (err) {
     console.error("Error updating user by ID: ", err);
-    res.status(500).send("Error updating user by ID");
+    res.status(500).send("Error updating user: " + err.message);
   }
 });
 
@@ -103,6 +104,7 @@ app.patch("/user/updateByEmail", async (req, res) => {
     const updatedUser = req.body;
     const user = await User.findOneAndUpdate({ emailId }, updatedUser, {
       returnDocument: "after",
+      runValidators: true,
     });
     if (!user) {
       res.status(404).send("User not found");
@@ -111,7 +113,7 @@ app.patch("/user/updateByEmail", async (req, res) => {
     }
   } catch (err) {
     console.error("Error updating user by email: ", err);
-    res.status(500).send("Error updating user by email");
+    res.status(500).send("Error updating user: " + err.message);
   }
 });
 
