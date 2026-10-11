@@ -77,10 +77,30 @@ app.delete("/user/deleteById", async (req, res) => {
   }
 });
 
-app.patch("/user/updateById", async (req, res) => {
+app.patch("/user/:userId", async (req, res) => {
   try {
     const updatedUser = req.body;
-    const userId = req.body.userId;
+    const userId = req.params?.userId;
+
+    const EDITABLE_FIELDS = [
+      "firstName",
+      "lastName",
+      "password",
+      "age",
+      "gender",
+      "skills",
+      "pfp",
+    ];
+
+    const isValidUpdate = Object.keys(updatedUser).every((key) =>
+      EDITABLE_FIELDS.includes(key),
+    );
+
+    if (!isValidUpdate) {
+      throw new Error(
+        "Sorry bro you can update only firstName, lastName, password, age, gender, skills and pfp",
+      );
+    }
 
     const user = await User.findByIdAndUpdate(userId, updatedUser, {
       returnDocument: "after",

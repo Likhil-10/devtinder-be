@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 
 const { Schema, model } = mongoose;
 
@@ -21,7 +22,7 @@ const userSchema = new Schema(
       trim: true,
       validate: {
         validator: function (value) {
-          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+          return validator.isEmail(value);
         },
         message: "Tf is that email bro, give a valid one",
       },
@@ -29,7 +30,13 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: true,
-      minLength: [6, "Give more lol"],
+      validate(value) {
+        if (!validator.isStrongPassword(value)) {
+          throw new Error(
+            "You cant keep your password weak like your personality bro",
+          );
+        }
+      },
     },
     age: {
       type: Number,
@@ -46,11 +53,29 @@ const userSchema = new Schema(
         message: "Only Straight people are allowed.",
       },
     },
-    skills: [String],
+    skills: {
+      type: [
+        {
+          type: String,
+          maxLength: [15, "Bro what kind of skill is that?"],
+        },
+      ],
+      validate: {
+        validator: function (value) {
+          return value.length <= 5;
+        },
+        message: "You can add only 5 skills bro",
+      },
+    },
     pfp: {
       type: String,
       default:
         "https://i.pinimg.com/originals/13/74/20/137420f5b9c39bc911e472f5d20f053e.jpg?nii=t",
+      validate(value) {
+        if (!validator.isURL(value)) {
+          throw new Error("Bro give a valid URL for pfp");
+        }
+      },
     },
   },
   { timestamps: true },
