@@ -3,10 +3,14 @@ const { connectDb } = require("./config/database");
 const User = require("./models/User");
 const { validateSignUp } = require("./utils/validation");
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
+const { userAuth } = require("./middlewares/auth");
 
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.post("/signup", async (req, res) => {
   const { firstName, lastName, emailId, password } = req.body;
@@ -39,11 +43,34 @@ app.post("/login", async (req, res) => {
       if (!isPasswordValid) {
         throw new Error("Invalid Credentials");
       } else {
+        const token = jwt.sign({ _id: user._id }, "MessiTheGoat", {
+          expiresIn: "1d",
+        });
+        res.cookie("token", token, {
+          expires: new Date(Date.now() + 8 * 3600000),
+        });
         res.send("Login Successful");
       }
     }
   } catch (err) {
     console.error("Error logging in user: ", err);
+    res.status(400).send("ERROR : " + err.message);
+  }
+});
+
+app.get("/profile", userAuth, async (req, res) => {
+  try {
+    res.send(req.user);
+  } catch (err) {
+    res.status(400).send("ERROR : " + err.message);
+  }
+});
+
+app.post("/sendConnectionRequest", userAuth, async (req, res) => {
+  try {
+    const user = req.user;
+    res.send(user.firstName + " sent a request!!");
+  } catch (err) {
     res.status(400).send("ERROR : " + err.message);
   }
 });
