@@ -91,8 +91,11 @@ userSchema.methods.getJwt = function () {
   return token;
 };
 
-userSchema.methods.verifyPassword = function (passwordEnteredByUser) {
-  const isPasswordValid = bcrypt.compare(passwordEnteredByUser, this.password);
+userSchema.methods.verifyPassword = async function (passwordEnteredByUser) {
+  const isPasswordValid = await bcrypt.compare(
+    passwordEnteredByUser,
+    this.password,
+  );
   return isPasswordValid;
 };
 
