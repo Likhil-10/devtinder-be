@@ -79,6 +79,11 @@ const userSchema = new Schema(
         }
       },
     },
+    about: {
+      type: String,
+      default: "Add your about here....",
+      maxLength: [50, "Max length is 50 chars."],
+    },
   },
   { timestamps: true },
 );
