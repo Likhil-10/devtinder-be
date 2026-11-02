@@ -23,6 +23,8 @@ const connectionRequestSchema = new Schema(
   { timestamps: true },
 );
 
+connectionRequestSchema.index({ fromUserId: 1, toUserId: 1 });
+
 connectionRequestSchema.pre("save", function (next) {
   if (this.fromUserId.equals(this.toUserId)) {
     throw new Error("Cannot send a connection request to yourself.");
