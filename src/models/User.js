@@ -48,9 +48,9 @@ const userSchema = new Schema(
     gender: {
       type: String,
       enum: {
-        values: ['male', 'female'],
-        message: 'Only male and female are allowed.',
-      }
+        values: ["male", "female"],
+        message: "Only male and female are allowed.",
+      },
       // validate: {
       //   validator: function (value) {
       //     const allowedGenders = ["male", "female"];
