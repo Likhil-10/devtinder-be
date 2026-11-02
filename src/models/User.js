@@ -47,13 +47,17 @@ const userSchema = new Schema(
     },
     gender: {
       type: String,
-      validate: {
-        validator: function (value) {
-          const allowedGenders = ["male", "female"];
-          return allowedGenders.includes(value);
-        },
-        message: "Only Straight people are allowed.",
-      },
+      enum: {
+        values: ['male', 'female'],
+        message: 'Only male and female are allowed.',
+      }
+      // validate: {
+      //   validator: function (value) {
+      //     const allowedGenders = ["male", "female"];
+      //     return allowedGenders.includes(value);
+      //   },
+      //   message: "Only Straight people are allowed.",
+      // },
     },
     skills: {
       type: [
