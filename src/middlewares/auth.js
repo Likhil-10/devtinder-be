@@ -21,6 +21,7 @@ const userAuth = async (req, res, next) => {
       next();
     }
   } catch (err) {
+    console.error("Error in userAuth middleware:", err);
     res.status(400).send("Error: " + err.message);
   }
 };

@@ -6,10 +6,12 @@ const connectionRequestSchema = new Schema(
   {
     fromUserId: {
       type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     toUserId: {
       type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     status: {
@@ -25,11 +27,10 @@ const connectionRequestSchema = new Schema(
 
 connectionRequestSchema.index({ fromUserId: 1, toUserId: 1 });
 
-connectionRequestSchema.pre("save", function (next) {
+connectionRequestSchema.pre("save", function () {
   if (this.fromUserId.equals(this.toUserId)) {
     throw new Error("Cannot send a connection request to yourself.");
   }
-  next();
 });
 
 const ConnectionRequest = model("ConnectionRequest", connectionRequestSchema);
